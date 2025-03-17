@@ -1,148 +1,194 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
+import 'package:delala/config/routes/route_name.dart'; // Import RouteName
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _logoAnimation;
-  late Animation<double> _textAnimation;
-  late Animation<double> _scaleAnimation;
+  late Animation<double> _logoScale;
+  late Animation<double> _textFade;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    // Initialize AnimationController and Animations
+
+    // Initialize animation controller
     _controller = AnimationController(
-      duration: Duration(seconds: 3),
       vsync: this,
+      duration: const Duration(milliseconds: 2500),
     );
 
-    // Logo fade-in animation
-    _logoAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    // Logo scale animation
+    _logoScale = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
+      ),
     );
 
-    // Text fade-in animation
-    _textAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    // Text fade animation
+    _textFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.4, 0.8, curve: Curves.easeIn),
+      ),
     );
 
-    // Logo scale animation for zoom-in effect
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    // Slide animation for tagline
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 1),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
+      ),
     );
 
-    // Start animation
-    _controller.forward();
+    _startSplash();
+  }
 
-    // Navigate to Welcome page after the animation ends
-    Future.delayed(Duration(seconds: 6), () {
-      context.go('/welcome');
-    });
+  Future<void> _startSplash() async {
+    try {
+      _controller.forward();
+      await Future.delayed(const Duration(seconds: 3)); // Set to 3 seconds
+      if (mounted) {
+        context.goNamed(RouteName.welcome); // Using RouteName.welcome
+      }
+    } catch (e) {
+      debugPrint('Splash screen error: $e');
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose(); // Dispose the controller when no longer needed
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent, // Base background color
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.purpleAccent, Colors.deepPurple, Colors.indigo],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.2, 0.7, 1],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.blue[900]!, Colors.blue[500]!],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: SafeArea(
+          child: Stack(
             children: [
-              // Animated Logo with scale and fade-in effect
-              FadeTransition(
-                opacity: _logoAnimation,
-                child: ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.purple, Colors.blue],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          offset: Offset(0, 10),
-                          blurRadius: 20,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'D',  // App initial or logo, can replace with an image/logo
-                        style: TextStyle(
-                          fontSize: 60,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 30),
-              // Animated Text with fade-in effect
-              FadeTransition(
-                opacity: _textAnimation,
+              // Main content
+              Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Welcome to Delala',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.6),
-                            offset: Offset(2, 2),
-                            blurRadius: 6,
+                    // Animated Circular Logo
+                    ScaleTransition(
+                      scale: _logoScale,
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.2),
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            '../../../../../assets/images/image.png',
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Your favorite online marketplace for unique, quality products.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.3),
-                            offset: Offset(2, 2),
-                            blurRadius: 5,
-                          ),
-                        ],
+                    const SizedBox(height: 24),
+                    // App Name
+                    FadeTransition(
+                      opacity: _textFade,
+                      child: const Text(
+                        'E-Shop Elite',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 10.0,
+                              color: Colors.black26,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
+                ),
+              ),
+
+              // Sliding Tagline and Loader
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 40),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SlideTransition(
+                        position: _slideAnimation,
+                        child: const Text(
+                          'Ultimate Shopping Experience',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      FadeTransition(
+                        opacity: _textFade,
+                        child: Container(
+                          width: 50,
+                          height: 4,
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.white24,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Version number
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'v1.0.0',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
             ],
