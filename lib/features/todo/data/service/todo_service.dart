@@ -5,7 +5,7 @@ import 'package:delala/injector.dart';
 import 'package:dio/dio.dart';
 
 class TodoService {
-    final _dioClient = sl<ApiService>();
+    final _dioClient = sl<DioClient>();
   /// Function to get [Todo] from backend
    Future<Response> fetchTodos() async {
     try{

@@ -6,9 +6,12 @@ class RouteName {
   static String signup = '/sign_up';
   static String home = '/home';
   static String wishlist = '/wishlist';
-  static String chat = '/chat';
+  static String chat = '/chat'; 
   static String cart = '/cart';
-  static String products = '/products';
+  static String itemDetails = '/itemDetails';
   static String profile = '/profile';
-  static String notications = '/notications';
+  static String notifications = '/notifications';
+  static String categoryDetails = '/category-details';
+
+  // static String promotionalDetails;
 }

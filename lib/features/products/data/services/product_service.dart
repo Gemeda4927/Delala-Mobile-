@@ -4,7 +4,7 @@ import 'package:delala/injector.dart';
 import 'package:dio/dio.dart';
 
 class ProductService {
-  final ApiService _dioClient = sl<ApiService>();
+  final DioClient _dioClient = sl<DioClient>();
 
   /// Function to get a list of products from the backend
   Future<Response> fetchProducts() async {

@@ -1,10 +1,10 @@
-abstract class LoginEvent {}
+// presentation/bloc/auth/auth_event.dart
+import 'package:delala/features/auth/sign_in/domain/entities/user_credentials.dart';
 
-class LoginRequested extends LoginEvent {
-  final String email;
-  final String password;
+abstract class AuthEvent {}
 
-  LoginRequested({required this.email, required this.password});
+class SignInEvent extends AuthEvent {
+  final UserCredentials credentials;
+
+  SignInEvent(this.credentials);
 }
-
-class TogglePasswordVisibility extends LoginEvent {}
