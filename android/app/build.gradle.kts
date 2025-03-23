@@ -1,14 +1,14 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id("dev.flutter.flutter-gradle-plugin")
+    id("dev.flutter.flutter-gradle-plugin") // Ensure Flutter plugin is applied last
+    id("com.google.gms.google-services") // Firebase Google Services plugin
 }
 
 android {
-    namespace = "com.example.delala"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    namespace = "com.gammmee.delala"
+    compileSdk = 34  
+    ndkVersion = "28.0.13004108"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -20,14 +20,11 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.delala"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        applicationId = "com.gammmee.delala"
+        minSdk = 23   
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
@@ -41,4 +38,12 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:32.7.3")) // Latest BOM version
+    implementation("com.google.firebase:firebase-auth-ktx")      // Firebase Authentication
+    implementation("com.google.firebase:firebase-firestore-ktx") // Firestore Database
+    implementation("com.google.firebase:firebase-messaging-ktx") // Firebase Cloud Messaging
+    implementation("com.google.firebase:firebase-analytics-ktx") // Firebase Analytics
 }
