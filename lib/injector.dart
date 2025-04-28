@@ -28,7 +28,7 @@ final sl = GetIt.instance;
 Future<void> initInjector() async {
   // Core services
   sl.registerSingleton<DioClient>(
-    DioClient(baseUrl: 'http://192.168.1.2:3000'),
+    DioClient(baseUrl: 'http://192.168.52.5:3000'),
   );
 
   // Todo feature

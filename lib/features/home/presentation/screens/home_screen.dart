@@ -44,7 +44,14 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeBloc(getHomeData)..add(const LoadHomeData()),
       child: Scaffold(
+
+
+        
         appBar: const CustomAppBar(),
+
+
+
+
         drawer: _buildDrawer(context),
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {

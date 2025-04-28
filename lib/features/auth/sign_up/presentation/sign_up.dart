@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // ignore: depend_on_referenced_packages
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:delala/features/auth/sign_up/presentation/bloc/sign_up_bloc.dart';
 import 'package:delala/features/auth/sign_up/presentation/bloc/sign_up_event.dart';
 import 'package:delala/features/auth/sign_up/presentation/bloc/sign_up_state.dart';
@@ -53,7 +52,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         title: const Text(
           "New Account",
-          style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -64,7 +66,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (state is AuthSuccess) {
             try {
               _showSuccessToast(state.message, state.userId);
-              // No navigation; stays on SignUpScreen
             } catch (e) {
               _showErrorSnackBar(context, 'Error showing success message: $e');
             }
@@ -86,25 +87,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           const SizedBox(height: 20),
                           _buildTextField(
-                            "Full name",
-                            "Gemeda Tamiru",
-                            false,
+                            label: "Full name",
+                            hint: "Gemeda Tamiru",
+                            obscure: false,
                             controller: _fullNameController,
-                            validator:
-                                (value) =>
-                                    value == null || value.isEmpty
-                                        ? 'Full name is required'
-                                        : null,
+                            validator: (value) => value == null || value.isEmpty
+                                ? 'Full name is required'
+                                : null,
                           ),
                           _buildPasswordField(),
                           _buildTextField(
-                            "Email",
-                            "example@example.com",
-                            false,
+                            label: "Email",
+                            hint: "example@example.com",
+                            obscure: false,
                             controller: _emailController,
                             validator: (value) {
-                              if (value == null || value.isEmpty)
+                              if (value == null || value.isEmpty) {
                                 return 'Email is required';
+                              }
                               if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                                 return 'Please enter a valid email';
                               }
@@ -112,15 +112,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                           ),
                           _buildTextField(
-                            "Mobile Number",
-                            "0914.....",
-                            false,
+                            label: "Mobile Number",
+                            hint: "0914.....",
+                            obscure: false,
                             controller: _mobileNumberController,
-                            validator:
-                                (value) =>
-                                    value == null || value.isEmpty
-                                        ? 'Mobile number is required'
-                                        : null,
+                            validator: (value) => value == null || value.isEmpty
+                                ? 'Mobile number is required'
+                                : null,
                           ),
                           _buildRoleDropdown(),
                           const SizedBox(height: 15),
@@ -160,9 +158,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
-                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
                               ),
                               child: const Text(
                                 "Sign Up",
@@ -185,26 +182,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _buildSocialButton(
-                                FontAwesomeIcons.google,
-                                "Google",
-                              ),
+                                  FontAwesomeIcons.google, "Google"),
                               const SizedBox(width: 15),
                               _buildSocialButton(
-                                FontAwesomeIcons.facebook,
-                                "Facebook",
-                              ),
+                                  FontAwesomeIcons.facebook, "Facebook"),
                               const SizedBox(width: 15),
                               _buildSocialButton(
-                                FontAwesomeIcons.fingerprint,
-                                "Fingerprint",
-                              ),
+                                  FontAwesomeIcons.fingerprint, "Fingerprint"),
                             ],
                           ),
                           const SizedBox(height: 20),
                           Center(
                             child: GestureDetector(
-                              onTap:
-                                  () => _navigateTo(context, RouteName.login),
+                              onTap: () =>
+                                  _navigateTo(context, RouteName.login),
                               child: RichText(
                                 text: const TextSpan(
                                   text: "Already have an account? ",
@@ -237,10 +228,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildTextField(
-    String label,
-    String hint,
-    bool obscure, {
+  Widget _buildTextField({
+    required String label,
+    required String hint,
+    required bool obscure,
     TextEditingController? controller,
     String? Function(String?)? validator,
   }) {
@@ -277,11 +268,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         TextFormField(
           controller: _passwordController,
           obscureText: _obscurePassword,
-          validator:
-              (value) =>
-                  value == null || value.isEmpty
-                      ? 'Password is required'
-                      : null,
+          validator: (value) =>
+              value == null || value.isEmpty ? 'Password is required' : null,
           decoration: InputDecoration(
             hintText: "Enter your password",
             filled: true,
@@ -302,9 +290,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   });
                 } catch (e) {
                   _showErrorSnackBar(
-                    context,
-                    'Error toggling password visibility: $e',
-                  );
+                      context, 'Error toggling password visibility: $e');
                 }
               },
             ),
@@ -323,10 +309,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 5),
         DropdownButtonFormField<String>(
           value: _selectedRole,
-          items:
-              ["Merchant", "Customer", "Super Admin"].map((role) {
-                return DropdownMenuItem(value: role, child: Text(role));
-              }).toList(),
+          items: ["Merchant", "Customer", "Super Admin"]
+              .map((role) => DropdownMenuItem(value: role, child: Text(role)))
+              .toList(),
           onChanged: (value) {
             try {
               if (value != null) {
@@ -415,13 +400,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.teal.shade700, // Deep teal for sophistication
-              Colors.greenAccent.shade400, // Bright green for energy
-              Colors.limeAccent.shade200, // Light lime for a pop
+              Colors.teal.shade700,
+              Colors.greenAccent.shade400,
+              Colors.limeAccent.shade200,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            stops: const [0.0, 0.6, 1.0], // Smooth gradient transition
+            stops: const [0.0, 0.6, 1.0],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
@@ -450,9 +435,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 color: Colors.white,
                 size: 36,
               ),
-              transitionBuilder:
-                  (child, animation) =>
-                      ScaleTransition(scale: animation, child: child),
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
             ),
             const SizedBox(width: 16),
             Flexible(
@@ -504,43 +488,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       );
 
+      showCustomToast(context, toast);
+    } catch (e) {
+      _showErrorSnackBar(context, 'Error showing toast: $e');
+    }
+  }
+
+  void showCustomToast(BuildContext context, Widget toast) {
+    FToast fToast = FToast();
+    fToast.init(context);
+
+    try {
       fToast.showToast(
         child: toast,
         gravity: ToastGravity.TOP,
         toastDuration: const Duration(seconds: 4),
-        positionedToastBuilder: (context, child) {
-          return AnimatedPositioned(
-            duration: const Duration(milliseconds: 600),
-            top: 60.0,
-            left: 20.0,
-            right: 20.0,
-            curve: Curves.easeOutCubic,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, -1.5),
-                end: Offset.zero,
-              ).animate(
-                CurvedAnimation(
-                  parent: AnimationController(
-                    duration: const Duration(milliseconds: 600),
-                    vsync: Navigator.of(context),
-                  )..forward(),
+        positionedToastBuilder: (context, child, gravity) {
+          return Stack(
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 600),
+                top: gravity == ToastGravity.TOP ? 60.0 : null,
+                left: 20.0,
+                right: 20.0,
+                curve: Curves.easeOutCubic,
+                child: AnimatedSlide(
+                  offset: Offset(0, gravity == ToastGravity.TOP ? 0 : -1.5),
+                  duration: const Duration(milliseconds: 600),
                   curve: Curves.easeOutCubic,
-                ),
-              ),
-              child: FadeTransition(
-                opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: AnimationController(
-                      duration: const Duration(milliseconds: 600),
-                      vsync: Navigator.of(context),
-                    )..forward(),
+                  child: AnimatedOpacity(
+                    opacity: 1.0,
+                    duration: const Duration(milliseconds: 600),
                     curve: Curves.easeIn,
+                    child: child,
                   ),
                 ),
-                child: child,
               ),
-            ),
+            ],
           );
         },
       );
